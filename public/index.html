@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinguaAI — ChatGPT Translator</title>
+  <meta name="description"
+    content="Translate text between 25+ languages instantly using ChatGPT AI. Fast, accurate, and beautifully designed." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Animated background orbs -->
+  <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb--3" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header__brand">
+      <svg class="header__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 8l6 6" />
+        <path d="M4 14l6-6 2-3" />
+        <path d="M2 5h12" />
+        <path d="M7 2h1" />
+        <path d="m22 22-5-10-5 10" />
+        <path d="M14 18h6" />
+      </svg>
+      <h1 class="header__title">Lingua<span class="header__title--accent">AI</span></h1>
+    </div>
+    <span class="header__badge">Powered by GPT-4o-mini</span>
+  </header>
+
+  <!-- Main translator -->
+  <main class="translator">
+    <div class="translator__controls">
+      <div class="lang-select" id="sourceLangWrap">
+        <label class="lang-select__label">From</label>
+        <select class="lang-select__dropdown" id="sourceLang"></select>
+      </div>
+
+      <button class="swap-btn" id="swapBtn" title="Swap languages">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" width="22" height="22">
+          <path d="M7 16V4m0 0L3 8m4-4l4 4" />
+          <path d="M17 8v12m0 0l4-4m-4 4l-4-4" />
+        </svg>
+      </button>
+
+      <div class="lang-select" id="targetLangWrap">
+        <label class="lang-select__label">To</label>
+        <select class="lang-select__dropdown" id="targetLang"></select>
+      </div>
+    </div>
+
+    <div class="translator__panels">
+      <!-- Source panel -->
+      <div class="panel glass-card">
+        <div class="panel__header">
+          <span class="panel__tag">Original</span>
+          <div class="panel__actions">
+            <span class="panel__char-count" id="charCount">0</span>
+            <button class="panel__action-btn" id="clearBtn" title="Clear">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <textarea class="panel__textarea" id="sourceText" placeholder="Type or paste text to translate…"
+          spellcheck="false"></textarea>
+
+        <!-- File upload zone -->
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" accept=".pdf,.docx" hidden />
+          <button class="upload-zone__btn" id="uploadBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            Upload PDF / DOCX
+          </button>
+          <span class="upload-zone__hint">or drag &amp; drop a file here</span>
+        </div>
+        <div class="file-info" id="fileInfo" hidden>
+          <span class="file-info__name" id="fileName"></span>
+          <button class="file-info__remove" id="fileRemove" title="Remove file" type="button">&times;</button>
+        </div>
+      </div>
+
+      <!-- Target panel -->
+      <div class="panel glass-card panel--target">
+        <div class="panel__header">
+          <span class="panel__tag">Translation</span>
+          <div class="panel__actions">
+            <button class="panel__action-btn" id="copyBtn" title="Copy translation">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <rect width="14" height="14" x="8" y="8" rx="2" />
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="panel__output" id="targetText">
+          <span class="panel__placeholder">Translation will appear here…</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Translate button -->
+    <button class="translate-btn" id="translateBtn">
+      <span class="translate-btn__text">Translate</span>
+      <span class="translate-btn__loader" aria-hidden="true"></span>
+      <span class="translate-btn__shortcut">Ctrl + Enter</span>
+    </button>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    Powered by Google Gemini
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

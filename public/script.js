@@ -56,6 +56,10 @@
     const fileInfo = $('#fileInfo');
     const fileName = $('#fileName');
     const fileRemove = $('#fileRemove');
+    const progressBar = $('#progressBar');
+    const progressFill = $('#progressFill');
+    const progressPercent = $('#progressPercent');
+    const progressLabel = $('.progress-bar__label');
 
     // ── Initialise language dropdowns ──────────────────────────────────────────
     function populateLanguages() {
@@ -75,6 +79,59 @@
 
         sourceLang.value = 'auto';
         targetLang.value = 'mn';
+    }
+
+    // ── Progress bar controller ────────────────────────────────────────────────
+    let progressInterval = null;
+    let currentProgress = 0;
+
+    function startProgress() {
+        currentProgress = 0;
+        progressBar.hidden = false;
+        progressFill.style.width = '0%';
+        progressPercent.textContent = '0%';
+        progressLabel.textContent = 'Translating…';
+
+        // Simulated progress: fast at first, slows down near 80%
+        progressInterval = setInterval(() => {
+            if (currentProgress < 30) {
+                currentProgress += Math.random() * 8 + 3;
+            } else if (currentProgress < 60) {
+                currentProgress += Math.random() * 4 + 1;
+            } else if (currentProgress < 85) {
+                currentProgress += Math.random() * 1.5 + 0.3;
+            } else if (currentProgress < 92) {
+                currentProgress += Math.random() * 0.5 + 0.1;
+            }
+            // Never exceeds 92 until the actual response arrives
+            currentProgress = Math.min(currentProgress, 92);
+            setProgress(currentProgress);
+        }, 200);
+    }
+
+    function setProgress(value) {
+        const p = Math.min(Math.round(value), 100);
+        progressFill.style.width = p + '%';
+        progressPercent.textContent = p + '%';
+    }
+
+    function completeProgress() {
+        clearInterval(progressInterval);
+        progressLabel.textContent = 'Complete!';
+        setProgress(100);
+
+        setTimeout(() => {
+            progressBar.hidden = true;
+            progressFill.style.width = '0%';
+            currentProgress = 0;
+        }, 800);
+    }
+
+    function cancelProgress() {
+        clearInterval(progressInterval);
+        progressBar.hidden = true;
+        progressFill.style.width = '0%';
+        currentProgress = 0;
     }
 
     // ── Toast notifications ────────────────────────────────────────────────────
@@ -177,6 +234,7 @@
         // UI → loading state
         translateBtn.classList.add('loading');
         targetText.innerHTML = '<span class="panel__placeholder">Translating…</span>';
+        startProgress();
 
         try {
             const res = await fetch('/api/translate', {
@@ -196,11 +254,13 @@
             }
 
             if (data.translation) {
+                completeProgress();
                 targetText.textContent = data.translation;
             } else {
                 throw new Error('No translation returned');
             }
         } catch (err) {
+            cancelProgress();
             targetText.innerHTML = `<span class="panel__placeholder">${escapeHtml(err.message)}</span>`;
             toast(err.message, 'error');
         } finally {
